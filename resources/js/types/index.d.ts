@@ -10,3 +10,18 @@ export type PageProps<T extends Record<string, unknown> = Record<string, unknown
         user: User;
     };
 };
+
+export interface Post {
+    // columns
+    id: number
+    user_id: number
+    body: string
+    created_at: string|null
+    updated_at: string|null
+    // relations
+    user: User
+}
+
+export type PostsProps = {
+    posts: Post[];
+}
