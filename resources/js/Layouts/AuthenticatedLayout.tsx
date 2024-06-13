@@ -1,10 +1,10 @@
-import { useState, PropsWithChildren, ReactNode } from 'react';
+import {PropsWithChildren, ReactNode, useState} from 'react';
 import ApplicationLogo from '@/Components/ApplicationLogo';
 import Dropdown from '@/Components/Dropdown';
 import NavLink from '@/Components/NavLink';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
-import { Link } from '@inertiajs/react';
-import { User } from '@/types';
+import {Link} from '@inertiajs/react';
+import {User} from '@/types';
 
 export default function Authenticated({ user, header, children }: PropsWithChildren<{ user: User, header?: ReactNode }>) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
@@ -24,6 +24,9 @@ export default function Authenticated({ user, header, children }: PropsWithChild
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                                 <NavLink href={route('dashboard')} active={route().current('dashboard')}>
                                     Dashboard
+                                </NavLink>
+                                <NavLink href={route('posts.index')} active={route().current('posts.index')}>
+                                    posts.index
                                 </NavLink>
                             </div>
                         </div>
