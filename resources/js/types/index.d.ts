@@ -23,5 +23,7 @@ export interface Post {
 }
 
 export type PostsProps = {
-    posts: Post[];
+    posts: {
+        data: Post[];
+    };
 }
