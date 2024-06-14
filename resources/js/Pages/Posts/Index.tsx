@@ -1,6 +1,7 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import {Head, useForm} from '@inertiajs/react';
+import {Head, Link, router, useForm} from '@inertiajs/react';
 import {PageProps, Post, PostsProps} from '@/types';
+import toast from "react-hot-toast";
 
 
 export default function Dashboard({auth, posts}: PageProps<PostsProps>) {
@@ -8,13 +9,23 @@ export default function Dashboard({auth, posts}: PageProps<PostsProps>) {
         body: '',
     })
 
-    const submit = (e: any) => {
+    const submit = (e: { preventDefault: () => void; }) => {
         e.preventDefault()
         post(route('posts.store'), {
             onSuccess: () => {
                 reset('body')
-            }
 
+                toast.success('Post created successfully',{
+                    position: 'top-right',
+                })
+            }
+        })
+    }
+
+    const refreshPosts = () => {
+        router.get(route('posts.index'), {}, {
+            only: ['posts'],
+            preserveScroll: true,
         })
     }
 
@@ -52,6 +63,19 @@ export default function Dashboard({auth, posts}: PageProps<PostsProps>) {
                             Post
                         </button>
                     </form>
+
+                    <div className="py-3 flex justify-center">
+                        <Link
+                            href={route('posts.index')}
+                            type='button'
+                            only={['posts']}
+                            preserveScroll={true}
+                            className="bg-gray-700 px-4 py-2 rounded-md font-medium text-white"
+                        >
+                            Refresh posts
+                        </Link>
+
+                    </div>
 
                     {posts.data.map((post: Post) => {
                         return (

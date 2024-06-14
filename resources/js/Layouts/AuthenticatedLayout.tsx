@@ -5,6 +5,7 @@ import NavLink from '@/Components/NavLink';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
 import {Link} from '@inertiajs/react';
 import {User} from '@/types';
+import {Toaster} from "react-hot-toast";
 
 export default function Authenticated({ user, header, children }: PropsWithChildren<{ user: User, header?: ReactNode }>) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
@@ -126,6 +127,7 @@ export default function Authenticated({ user, header, children }: PropsWithChild
             )}
 
             <main>{children}</main>
+            <Toaster/>
         </div>
     );
 }
