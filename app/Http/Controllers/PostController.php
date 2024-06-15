@@ -20,7 +20,13 @@ class PostController extends Controller
 
     public function Store(StorePostRequest $request)
     {
-        auth()->user()->posts()->create($request->validated());
+//        auth()->user()->posts()->create($request->validated());
+
+        return redirect()->route('posts.index')->with('message',[
+            'type' => 'success',
+            'body' => 'Post created successfully'
+        ]);
+
     }
 
 }

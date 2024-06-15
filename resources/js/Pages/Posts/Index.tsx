@@ -1,23 +1,31 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import {Head, Link, router, useForm} from '@inertiajs/react';
-import {PageProps, Post, PostsProps} from '@/types';
+import {Head, Link, router, useForm, usePage} from '@inertiajs/react';
+import {MessageProps, PageProps, Post, PostsProps} from '@/types';
 import toast from "react-hot-toast";
+import {useEffect} from "react";
 
 
 export default function Dashboard({auth, posts}: PageProps<PostsProps>) {
-    const {data, setData, post, processing, errors, reset, clearErrors} = useForm({
-        body: '',
-    })
+    const {data, setData, post, processing, errors, reset, clearErrors} =
+        useForm("StorePost", {
+            body: "",
+        });
+
+    const page = usePage<MessageProps>()
+
+    useEffect(() => {
+        if (page.props.message?.body) {
+            toast.success(page.props.message.body, {
+                position: 'top-right',
+            });
+        }
+    }, [page.props.message?.body]);
 
     const submit = (e: { preventDefault: () => void; }) => {
         e.preventDefault()
         post(route('posts.store'), {
             onSuccess: () => {
                 reset('body')
-
-                toast.success('Post created successfully',{
-                    position: 'top-right',
-                })
             }
         })
     }
@@ -26,6 +34,7 @@ export default function Dashboard({auth, posts}: PageProps<PostsProps>) {
         router.get(route('posts.index'), {}, {
             only: ['posts'],
             preserveScroll: true,
+            preserveState: true,
         })
     }
 
@@ -41,28 +50,36 @@ export default function Dashboard({auth, posts}: PageProps<PostsProps>) {
 
             <div className="py-12">
                 <div className="max-w-3xl mx-auto sm:px-6 lg:px-8 space-y-3">
-                    <form className="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6" onSubmit={submit}>
-                        <label form="body" className="sr-only">Body</label>
-                        <textarea
-                            name="body"
-                            id="body"
-                            rows={5}
-                            cols={30}
-                            className="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm w-full"
-                            onChange={(e) => setData('body', e.target.value)}
-                            value={data.body}
-                            onFocus={() => clearErrors('body')}
-                        >
-                    </textarea>
-                        {errors.body && <div className="text-red-500">{errors.body}</div>}
 
-                        <button type="submit"
-                                className="mt-2 bg-gray-700 px-4 py-2 rounded-md font-medium text-white ${processing ? 'opacity-50' : ''}"
-                                disabled={processing}
-                        >
-                            Post
-                        </button>
-                    </form>
+                    <>
+                        {
+                            page.props.post_create && (
+                                <form className="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6" onSubmit={submit}>
+                                    <label form="body" className="sr-only">Body</label>
+                                    <textarea
+                                        name="body"
+                                        id="body"
+                                        rows={5}
+                                        cols={30}
+                                        className="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm w-full"
+                                        onChange={(e) => setData('body', e.target.value)}
+                                        value={data.body}
+                                        onFocus={() => clearErrors('body')}
+                                    >
+                    </textarea>
+                                    {errors.body && <div className="text-red-500">{errors.body}</div>}
+
+                                    <button type="submit"
+                                            className="mt-2 bg-gray-700 px-4 py-2 rounded-md font-medium text-white ${processing ? 'opacity-50' : ''}"
+                                            disabled={processing}
+                                    >
+                                        Post
+                                    </button>
+                                </form>
+                            )
+                        }
+                    </>
+
 
                     <div className="py-3 flex justify-center">
                         <Link
@@ -71,6 +88,7 @@ export default function Dashboard({auth, posts}: PageProps<PostsProps>) {
                             only={['posts']}
                             preserveScroll={true}
                             className="bg-gray-700 px-4 py-2 rounded-md font-medium text-white"
+                            preserveState={true}
                         >
                             Refresh posts
                         </Link>

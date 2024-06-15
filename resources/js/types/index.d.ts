@@ -16,8 +16,8 @@ export interface Post {
     id: number
     user_id: number
     body: string
-    created_at: string|null
-    updated_at: string|null
+    created_at: string | null
+    updated_at: string | null
     // relations
     user: User
 }
@@ -26,4 +26,10 @@ export type PostsProps = {
     posts: {
         data: Post[];
     };
+}
+
+export type MessageProps = {
+    message: {
+        body: string
+    }
 }
